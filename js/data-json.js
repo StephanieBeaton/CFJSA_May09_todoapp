@@ -21,10 +21,10 @@
       // var newContent = '<ul>';
 
 
-      // console.log('array length = ' + responseObject.events.length);
+      // console.log('array length = ' + responseObject.todos.length);
 
-      // for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
-      //   newContent += '<li>' + responseObject.events[i].location +  ' ' + responseObject.events[i].date + '</li>';
+      // for (var i = 0; i < responseObject.todos.length; i++) { // Loop through object
+      //   newContent += '<li>' + responseObject.todos[i].location +  ' ' + responseObject.todos[i].date + '</li>';
       // }
 
       // newContent += '</ul>';
@@ -39,28 +39,28 @@
       var newContent2 = '<ul>';
       var newContent;
 
-      console.log('array length = ' + responseObject.events.length);
+      console.log('array length = ' + responseObject.todos.length);
 
       var uniqueId = "9999";
 
-      for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
+      for (var i = 0; i < responseObject.todos.length; i++) { // Loop through object
 
-        uniqueId = responseObject.events[i].uniqueId;
+        uniqueId = responseObject.todos[i].uniqueId;
         newContent = '';
         newContent += '<li id="listItem&">';
-        newContent +=   '<div id="displayNote&">';
-        newContent +=   "uniqueId : " + uniqueId
-                        + ' ' + responseObject.events[i].location
-                        + ' ' + responseObject.events[i].date;
-        newContent +=   '<div>'
+        newContent +=   '<div id="displayToDo&">';
+        newContent +=   uniqueId +
+                        ' -- ' + responseObject.todos[i].location +
+                        ' -- ' + responseObject.todos[i].date;
+        newContent +=   '</div>';
         newContent += '<form id="editForm&" method="post">';
-        newContent +=   '<label for="note&">Edit Note</label>';
-        newContent +=   '<input type="text" id="note&">';
+        newContent +=   '<label for="todo&">Edit ToDo</label>';
+        newContent +=   '<input type="text" id="todo&">';
         newContent +=   '<button id="submitbutton&" name="submitbutton&" type="submit">Save Changes</button>';
         newContent +=   '<button id="cancelbutton&" name="cancelbutton&" type="button">Cancel</button>';
         newContent += '</form>';
-        newContent += '<button id="editbutton&" name="editbutton&">Edit Note</button>';
-        newContent += '<button id="deletebutton&" name="deletebutton&">Delete Note</button>';
+        newContent += '<button id="editbutton&" name="editbutton&">Edit ToDo</button>';
+        newContent += '<button id="deletebutton&" name="deletebutton&">Delete ToDo</button>';
         newContent += '</li>';
 
         newContent2 += newContent.replace(/&/gi, uniqueId);
@@ -90,7 +90,18 @@
      $('ul').on('click', "button[name*='cancelbutton']" , handleCancelButton);
      $('ul').on('click', "button[name*='deletebutton']" , handleDeleteButton);
 
-     $("button[name*='editForm']").hide();
+     $("form[name*='editForm']").hide();
+
+     $("#editForm0001").hide();
+     $("#editForm0002").hide();
+     $("#editForm0003").hide();
+     $("#editForm0004").hide();
+     $("#editForm0005").hide();
+     $("#editForm0006").hide();
+     $("#editForm0007").hide();
+     $("#editForm0008").hide();
+     $("#editForm0009").hide();
+     $("#editForm0010").hide();
 
 
       //==================================================
@@ -106,10 +117,10 @@
 
   // =========================================================
 
-  // Add event listener to trap when clicking "Save New Note" button
-  // ...to creating a new "event" or "note" or "resource"
+  // Add event listener to trap when clicking "Save New ToDo" button
+  // ...to creating a new "event" or "ToDo" or "resource"
 
-  $('#newNoteName').on('submit', function(e) {
+  $('#newToDoName').on('submit', function(e) {
 
      var newObject =
      {
@@ -148,7 +159,7 @@
 
      // left pad uniqueId so that it is 4 chars long.
      var pad = "0000";
-     var paddedUniqueId = (pad + newUniqueId).slice(-pad.length)
+     var paddedUniqueId = (pad + newUniqueId).slice(-pad.length);
 
      newObject.uniqueId = paddedUniqueId;
 
@@ -174,28 +185,28 @@
       var newContent2 = '<ul>';
       var newContent;
 
-      console.log('array length = ' + responseObject.events.length);
+      console.log('array length = ' + responseObject.todos.length);
 
       var uniqueId = "9999";
 
-      for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
+      for (var i = 0; i < responseObject.todos.length; i++) { // Loop through object
 
-        uniqueId = responseObject.events[i].uniqueId;
+        uniqueId = responseObject.todos[i].uniqueId;
         newContent = '';
         newContent += '<li id="listItem&">';
-        newContent +=   '<div id="displayNote&">';
-        newContent +=   "uniqueId : " + uniqueId
-                        + ' ' + responseObject.events[i].location
-                        + ' ' + responseObject.events[i].date;
-        newContent +=   '<div>'
+        newContent +=   '<div id="displayToDo&">';
+        newContent +=   uniqueId +
+                        ' -- ' + responseObject.todos[i].location +
+                        ' -- ' + responseObject.todos[i].date;
+        newContent +=   '</div>';
         newContent += '<form id="editForm&" method="post">';
-        newContent +=   '<label for="note&">Edit Note</label>';
-        newContent +=   '<input type="text" id="note&">';
+        newContent +=   '<label for="todo&">Edit ToDo</label>';
+        newContent +=   '<input type="text" id="todo&">';
         newContent +=   '<button id="submitbutton&" name="submitbutton&" type="submit">Save Changes</button>';
         newContent +=   '<button id="cancelbutton&" name="cancelbutton&" type="button">Cancel</button>';
         newContent += '</form>';
-        newContent += '<button id="editbutton&" name="editbutton&">Edit Note</button>';
-        newContent += '<button id="deletebutton&" name="deletebutton&">Delete Note</button>';
+        newContent += '<button id="editbutton&" name="editbutton&">Edit ToDo</button>';
+        newContent += '<button id="deletebutton&" name="deletebutton&">Delete ToDo</button>';
         newContent += '</li>';
 
         newContent2 += newContent.replace(/&/gi, uniqueId);
@@ -218,6 +229,19 @@
      $('ul').on('click', "button[name*='deletebutton']" , handleDeleteButton);
 
      $("button[name*='editForm']").hide();
+
+
+     $("#editForm0001").hide();
+     $("#editForm0002").hide();
+     $("#editForm0003").hide();
+     $("#editForm0004").hide();
+     $("#editForm0005").hide();
+     $("#editForm0006").hide();
+     $("#editForm0007").hide();
+     $("#editForm0008").hide();
+     $("#editForm0009").hide();
+     $("#editForm0010").hide();
+
 
 
     };
@@ -262,7 +286,7 @@
 
      xhr3.open('PUT', 'http://localhost:3000/data/data.json', true);        // Prepare the request
 
-     newObject.location = $('#note' + newObject.uniqueId).val();
+     newObject.location = $('#todo' + newObject.uniqueId).val();
 
      console.log("JSON.stringify(newObject) = " + JSON.stringify(newObject));
      xhr3.send(JSON.stringify(newObject));    // Send the request
@@ -271,15 +295,15 @@
      // we know the uniqueId of the note being updated.
      // ... we can just update the html now
 
-     //responseObject.events[i].location +  ' ' + responseObject.events[i].date;
-     // var location_and_date = $('#displayNote' + newObject.uniqueId).text();
+     //responseObject.todos[i].location +  ' ' + responseObject.todos[i].date;
+     // var location_and_date = $('#displayToDo' + newObject.uniqueId).text();
      // var date = location_and_date.substr(location_and_date.length - "May 01".length);
 
      // var newText =   "uniqueId : " + newObject.uniqueId
      //              + ' ' + newObject.location
      //              + ' ' + date;
 
-     // $('#displayNote' + newObject.uniqueId).text(newText);
+     // $('#displayToDo' + newObject.uniqueId).text(newText);
 
 
      xhr3.onload = function() {                       // When readystate changes
@@ -299,28 +323,28 @@
           var newContent2 = '<ul>';
           var newContent;
 
-          console.log('array length = ' + responseObject.events.length);
+          console.log('array length = ' + responseObject.todos.length);
 
           var uniqueId = "9999";
 
-          for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
+          for (var i = 0; i < responseObject.todos.length; i++) { // Loop through object
 
-            uniqueId = responseObject.events[i].uniqueId;
+            uniqueId = responseObject.todos[i].uniqueId;
             newContent = '';
             newContent += '<li id="listItem&">';
-            newContent +=   '<div id="displayNote&">';
-            newContent +=   "uniqueId : " + uniqueId
-                            + ' ' + responseObject.events[i].location
-                            + ' ' + responseObject.events[i].date;
-            newContent +=   '<div>'
+            newContent +=   '<div id="displayToDo&">';
+            newContent +=   uniqueId +
+                            ' -- ' + responseObject.todos[i].location +
+                            ' -- ' + responseObject.todos[i].date;
+            newContent +=   '<div>';
             newContent += '<form id="editForm&" method="post">';
-            newContent +=   '<label for="note&">Edit Note</label>';
-            newContent +=   '<input type="text" id="note&">';
+            newContent +=   '<label for="todo&">Edit ToDo</label>';
+            newContent +=   '<input type="text" id="todo&">';
             newContent +=   '<button id="submitbutton&" name="submitbutton&" type="submit">Save Changes</button>';
             newContent +=   '<button id="cancelbutton&" name="cancelbutton&" type="button">Cancel</button>';
             newContent += '</form>';
-            newContent += '<button id="editbutton&" name="editbutton&">Edit Note</button>';
-            newContent += '<button id="deletebutton&" name="deletebutton&">Delete Note</button>';
+            newContent += '<button id="editbutton&" name="editbutton&">Edit ToDo</button>';
+            newContent += '<button id="deletebutton&" name="deletebutton&">Delete ToDo</button>';
             newContent += '</li>';
 
             newContent2 += newContent.replace(/&/gi, uniqueId);
@@ -346,6 +370,19 @@
          $('ul').on('click', "button[name*='editbutton']" ,   handleEditButton);
          $('ul').on('click', "button[name*='cancelbutton']" , handleCancelButton);
          $('ul').on('click', "button[name*='deletebutton']" , handleDeleteButton);
+
+         $("form[name*='editForm']").hide();
+
+         $("#editForm0001").hide();
+         $("#editForm0002").hide();
+         $("#editForm0003").hide();
+         $("#editForm0004").hide();
+         $("#editForm0005").hide();
+         $("#editForm0006").hide();
+         $("#editForm0007").hide();
+         $("#editForm0008").hide();
+         $("#editForm0009").hide();
+         $("#editForm0010").hide();
 
       };
 
@@ -374,7 +411,7 @@
 
  function handleDeleteButton(e) {
 
-    // delete the Note from the JSON file on the server
+    // delete the ToDo from the JSON file on the server
 
     console.log("e.target.name = " + e.target.name);
 
@@ -439,8 +476,11 @@
    // $("button[name*='submitbutton']").hide();
    // $("button[name*='cancelbutton']").hide();
 
-
+   var test = $('#editForm' + uniqueId);
    $('#editForm' + uniqueId).show();
+
+   // hide Edit button
+   e.target.hide();
 
 
  };  //  function handleEditButton(e) {

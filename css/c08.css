@@ -57,6 +57,7 @@ nav a:hover, a.current {
 
 a {text-decoration: none; color: #000;}
 
+
 .third, .event {
   width: 320px;
   float: left;
@@ -85,9 +86,13 @@ a {text-decoration: none; color: #000;}
 #vote {padding-top: 20px;}
 p#selector {margin-top: -40px;}
 
+
 form {
-  margin: 0 0 0 90px;
-  width: 300px;}
+  width: 300px;
+  border: none;
+  padding: 6px;
+  margin: 12px;
+}
 label, input {
   display: inline-block;}
 label {
@@ -116,8 +121,27 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: #000;
   cursor: pointer;}
+section{
+  border: none;
+}
+ul {
+  border: none;
+  list-style-type: none;
+}
+div {
+  border: none;
+  font-weight: bold;
+  color: black;
+}
+li {
+  padding: 18px;
+  margin: 6p;
+  align: left;
+}
 
-
+.footer {
+  display: inline;
+}
 /* Exchange rates */
 #rates div {
   background-repeat:   no-repeat;

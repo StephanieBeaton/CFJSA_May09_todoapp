@@ -1,1 +1,1 @@
-{"events":[{"location":"San Francisco, CA","date":"Jun 30","map":"img/map-ny.png","uniqueId":"0001"},{"location":"Austin, TX","date":"May 15","map":"img/map-tx.png","uniqueId":"0002"},{"location":"Taos, NM","date":"Jun 30","map":"img/map-ny.png","uniqueId":"0003"}]}
+{"todos":[{"location":"Apply for job at Amazon","date":"May 01","map":"img/map-ca.png","uniqueId":"0001"},{"location":"Go to Seattle JS Meetup","date":"May 15","map":"img/map-tx.png","uniqueId":"0002"},{"location":"Attend Foundation 1 as TA","date":"May 30","map":"img/map-ny.png","uniqueId":"0003"}]}
