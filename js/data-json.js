@@ -41,11 +41,18 @@
 
       console.log('array length = ' + responseObject.events.length);
 
-      for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
-        newContent = '';
-        newContent += '<li>';
-        newContent += responseObject.events[i].location +  ' ' + responseObject.events[i].date;
+      var uniqueId = "9999";
 
+      for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
+
+        uniqueId = responseObject.events[i].uniqueId;
+        newContent = '';
+        newContent += '<li id="listItem&">';
+        newContent +=   '<div id="displayNote&">';
+        newContent +=   "uniqueId : " + uniqueId
+                        + ' ' + responseObject.events[i].location
+                        + ' ' + responseObject.events[i].date;
+        newContent +=   '<div>'
         newContent += '<form id="editForm&" method="post">';
         newContent +=   '<label for="note&">Edit Note</label>';
         newContent +=   '<input type="text" id="note&">';
@@ -56,7 +63,7 @@
         newContent += '<button id="deletebutton&" name="deletebutton&">Delete Note</button>';
         newContent += '</li>';
 
-        newContent2 += newContent.replace(/&/gi, i.toString());
+        newContent2 += newContent.replace(/&/gi, uniqueId);
 
       }
 
@@ -66,12 +73,25 @@
       //document.getElementById('content').innerHTML = xhr.responseText;
       document.getElementById('content').innerHTML = newContent2;
 
+      // create any JQuery Event Listeners that are required
+      // ... for the new html added above
+      // Event Delegation   JavaScript & JQuery text  page 268
+      // Delegate all button clicks inside <ul> to <ul> element
+
      //$('#editForm0').on('click', handleSubmitButton);
      //$( "button[name*='submitbutton']" ).on('submit', handleSubmitButton);
 
      //$( "input[name*='man']" )
 
-     $('#submitbutton0').on('click', handleSubmitButton);
+     //$('#submitbutton0').on('click', handleSubmitButton);
+     $('ul').on('click', "button[name*='submitbutton']" , handleSubmitButton);
+
+     $('ul').on('click', "button[name*='editbutton']" ,   handleEditButton);
+     $('ul').on('click', "button[name*='cancelbutton']" , handleCancelButton);
+     $('ul').on('click', "button[name*='deletebutton']" , handleDeleteButton);
+
+     $("button[name*='editForm']").hide();
+
 
       //==================================================
 
@@ -82,12 +102,12 @@
   xhr1.open('GET', 'http://localhost:3000/data/data.json', true);        // Prepare the request
   xhr1.send(null);                                 // Send the request
 
-  // When working locally in Firefox, you may see an error saying that the JSON is not well-formed.
-  // This is because Firefox is not reading the correct MIME type (and it can safely be ignored).
-
   // If you get it on a server, you may need to se the MIME type for JSON on the server (application/JSON).
 
   // =========================================================
+
+  // Add event listener to trap when clicking "Save New Note" button
+  // ...to creating a new "event" or "note" or "resource"
 
   $('#newNoteName').on('submit', function(e) {
 
@@ -95,9 +115,11 @@
      {
        "location": "Seattle, WA",
        "date": "Jun 30",
-       "map": "img/map-ny.png"
+       "map": "img/map-ny.png",
+       "uniqueId": "9999"
      };
 
+     // stop process from going to a new page
      e.preventDefault();
 
      console.log("inside call back for submit event");
@@ -107,8 +129,40 @@
 
      xhr2.open('POST', 'http://localhost:3000/data/data.json', true);        // Prepare the request
 
+     newObject.uniqueId = "??";
+     // loop thru all the <li>'s and add one to max uniqueId
+     //&&
+     var maxUniqueId = 0;
+
+     $('ul').children().each(function(){
+       console.log(this.id);
+       var currId = this.id;
+       var uniqueId = Number(currId.substr(currId.length - 4));
+       if (maxUniqueId < uniqueId) {
+         maxUniqueId = uniqueId;
+       }
+     });
+
+     var newUniqueId = maxUniqueId + 1;
+     newUniqueId = newUniqueId.toString();
+
+     // left pad uniqueId so that it is 4 chars long.
+     var pad = "0000";
+     var paddedUniqueId = (pad + newUniqueId).slice(-pad.length)
+
+     newObject.uniqueId = paddedUniqueId;
+
+
      newObject.location = $('#newNoteBody').val();
+     $('#newNoteBody').val('');
+
      xhr2.send(JSON.stringify(newObject));    // Send the request
+
+     // need to wait for asynch call to server to return the new uniqueId
+     // ... for the new Note
+
+     // We don't really need to rebuild the whole <ul>
+     // ... we could just add the new <li> to the bottom of the list
 
      xhr2.onload = function() {                       // When readystate changes
       // The following conditional check will not work locally - only on a server
@@ -122,22 +176,29 @@
 
       console.log('array length = ' + responseObject.events.length);
 
-      for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
-        newContent = '';
-        newContent += '<li>';
-        newContent += responseObject.events[i].location +  ' ' + responseObject.events[i].date;
+      var uniqueId = "9999";
 
+      for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
+
+        uniqueId = responseObject.events[i].uniqueId;
+        newContent = '';
+        newContent += '<li id="listItem&">';
+        newContent +=   '<div id="displayNote&">';
+        newContent +=   "uniqueId : " + uniqueId
+                        + ' ' + responseObject.events[i].location
+                        + ' ' + responseObject.events[i].date;
+        newContent +=   '<div>'
         newContent += '<form id="editForm&" method="post">';
         newContent +=   '<label for="note&">Edit Note</label>';
         newContent +=   '<input type="text" id="note&">';
-        newContent +=   '<button id="submitbutton&" type="submit">Save Changes</button>';
-        newContent +=   '<button id="cancelbutton&" type="button">Cancel</button>';
+        newContent +=   '<button id="submitbutton&" name="submitbutton&" type="submit">Save Changes</button>';
+        newContent +=   '<button id="cancelbutton&" name="cancelbutton&" type="button">Cancel</button>';
         newContent += '</form>';
-        newContent += '<button id="editbutton&">Edit Note</button>';
-        newContent += '<button id="deletebutton&">Delete Note</button>';
+        newContent += '<button id="editbutton&" name="editbutton&">Edit Note</button>';
+        newContent += '<button id="deletebutton&" name="deletebutton&">Delete Note</button>';
         newContent += '</li>';
 
-        newContent2 += newContent.replace(/&/gi, i.toString());
+        newContent2 += newContent.replace(/&/gi, uniqueId);
 
       }
 
@@ -147,11 +208,16 @@
       //document.getElementById('content').innerHTML = xhr.responseText;
       document.getElementById('content').innerHTML = newContent2;
 
-     //$( "button[name*='submitbutton']" ).on('submit', handleSubmitButton);
 
-     //$( "input[name*='man']" )
+     // need to add Event Listeners for 3 more buttons here
+     // ...  cancelbutton0,  editbutton0, deletebutton0
 
-     $('#submitbutton0').on('click', handleSubmitButton);
+     $('ul').on('click', "button[name*='submitbutton']" , handleSubmitButton);
+     $('ul').on('click', "button[name*='editbutton']" ,   handleEditButton);
+     $('ul').on('click', "button[name*='cancelbutton']" , handleCancelButton);
+     $('ul').on('click', "button[name*='deletebutton']" , handleDeleteButton);
+
+     $("button[name*='editForm']").hide();
 
 
     };
@@ -162,79 +228,223 @@
   // ==========================================================
 
 
- //   $("button[id*='submitButton']").on('submit', function(e) {
- //   $('#editForm0').on('click', function(e) {
-
-  //$('content').on('submit', handleSubmitButton);
-
   function handleSubmitButton(e) {
-       // what is "e" ?  Find the button clicked
-       console.log("e = " + e);
-       // currentTarget: button#submitbutton0
+    // what is "e" ?  Find the button clicked
+    console.log("e = " + e.target);
 
-       alert("inside handleSubmitButton");
+    console.log("e.target.name = " + e.target.name);
 
-       var newObject =
-       {
-         "location": "Seattle, WA",
-         "date": "Jun 30",
-         "map": "img/map-ny.png"
-       };
+     //alert("inside handleSubmitButton");
 
-       e.preventDefault();
+     var newObject =
+     {
+       "location": "Seattle, WA",
+       "date": "Jun 30",
+       "map": "img/map-ny.png",
+       "uniqueId": 9999
+     };
+
+     var uniqueId = e.target.name.substr(e.target.name.length - 4);
+
+     // left pad uniqueId so that it is 4 chars long.
+     var pad = "0000";
+
+     newObject.uniqueId = uniqueId;
 
 
+     // stop process from going to a new page when submitbutton0 is clicked
+     e.preventDefault();
 
-       console.log("inside call back for click event on ul");
+     console.log("inside call back for submitbutton0 click event on ul");
 
-       // send POST request to the server
-       var xhr3 = new XMLHttpRequest();
+     // send POST request to the server
+     var xhr3 = new XMLHttpRequest();
 
-       xhr3.open('POST', 'http://localhost:3000/data/data.json', true);        // Prepare the request
+     xhr3.open('PUT', 'http://localhost:3000/data/data.json', true);        // Prepare the request
 
-       newObject.location = $('#note&').val();
-       xhr3.send(JSON.stringify(newObject));    // Send the request
+     newObject.location = $('#note' + newObject.uniqueId).val();
 
-       // xhr3.onload = function() {                       // When readystate changes
-       //  // The following conditional check will not work locally - only on a server
-       //  //if(xhr.status === 200) {                      // If server status was ok
-       //  console.log("xhr3.responseText = " + xhr3.responseText)
-       //  responseObject = JSON.parse(xhr2.responseText);
+     console.log("JSON.stringify(newObject) = " + JSON.stringify(newObject));
+     xhr3.send(JSON.stringify(newObject));    // Send the request
 
-       //  // BUILD UP STRING WITH NEW CONTENT (could also use DOM manipulation)
-       //  var newContent2 = '<ul>';
-       //  var newContent;
+     // we don't need to wait until the request returns from the Server
+     // we know the uniqueId of the note being updated.
+     // ... we can just update the html now
 
-       //  console.log('array length = ' + responseObject.events.length);
+     //responseObject.events[i].location +  ' ' + responseObject.events[i].date;
+     // var location_and_date = $('#displayNote' + newObject.uniqueId).text();
+     // var date = location_and_date.substr(location_and_date.length - "May 01".length);
 
-       //  for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
-       //    newContent = '';
-       //    newContent += '<li>';
-       //    newContent += responseObject.events[i].location +  ' ' + responseObject.events[i].date;
+     // var newText =   "uniqueId : " + newObject.uniqueId
+     //              + ' ' + newObject.location
+     //              + ' ' + date;
 
-       //    newContent += '<form id="edit&">';
-       //    newContent +=   '<label for="note&">Edit Note</label>';
-       //    newContent +=   '<input type="text" id="note&">';
-       //    newContent +=   '<button id="submitbutton&" type="submit">Save Changes</button>';
-       //    newContent +=   '<button id="cancelbutton&" type="button">Cancel</button>';
-       //    newContent += '</form>';
-       //    newContent += '<button id="editbutton&">Edit Note</button>';
-       //    newContent += '<button id="deletebutton&">Delete Note</button>';
-       //    newContent += '</li>';
+     // $('#displayNote' + newObject.uniqueId).text(newText);
 
-       //    newContent2 += newContent.replace(/&/gi, i.toString());
 
-       //  }
+     xhr3.onload = function() {                       // When readystate changes
+        // The following conditional check will not work locally - only on a server
+        //if(xhr3.status === 200) {                      // If server status was ok
+        console.log("xhr3.responseText = " + xhr3.responseText);
 
-       //  newContent2 += '</ul>';
+        if(xhr3.status != 200) {
+          console.log("handleSubmitButton returned status = " + xhr3.status);
+        } else {
+          // The following conditional check will not work locally - only on a server
+          //if(xhr3.status === 200) {                      // If server status was ok
+          console.log("xhr3.responseText = " + xhr3.responseText);
+          responseObject = JSON.parse(xhr3.responseText);
 
-        // Update the page with the new content
-        //document.getElementById('content').innerHTML = xhr.responseText;
-        //document.getElementById('content').innerHTML = newContent2;
+          // BUILD UP STRING WITH NEW CONTENT (could also use DOM manipulation)
+          var newContent2 = '<ul>';
+          var newContent;
 
-    //};
+          console.log('array length = ' + responseObject.events.length);
+
+          var uniqueId = "9999";
+
+          for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
+
+            uniqueId = responseObject.events[i].uniqueId;
+            newContent = '';
+            newContent += '<li id="listItem&">';
+            newContent +=   '<div id="displayNote&">';
+            newContent +=   "uniqueId : " + uniqueId
+                            + ' ' + responseObject.events[i].location
+                            + ' ' + responseObject.events[i].date;
+            newContent +=   '<div>'
+            newContent += '<form id="editForm&" method="post">';
+            newContent +=   '<label for="note&">Edit Note</label>';
+            newContent +=   '<input type="text" id="note&">';
+            newContent +=   '<button id="submitbutton&" name="submitbutton&" type="submit">Save Changes</button>';
+            newContent +=   '<button id="cancelbutton&" name="cancelbutton&" type="button">Cancel</button>';
+            newContent += '</form>';
+            newContent += '<button id="editbutton&" name="editbutton&">Edit Note</button>';
+            newContent += '<button id="deletebutton&" name="deletebutton&">Delete Note</button>';
+            newContent += '</li>';
+
+            newContent2 += newContent.replace(/&/gi, uniqueId);
+
+          }
+
+          newContent2 += '</ul>';
+
+          // Update the page with the new content
+          //document.getElementById('content').innerHTML = xhr3.responseText;
+          document.getElementById('content').innerHTML = newContent2;
+
+         //$( "button[name*='submitbutton']" ).on('submit', handleSubmitButton);
+
+         //$( "input[name*='man']" )
+
+         //$('#submitbutton0').on('click', handleSubmitButton);
+
+         // need to add Event Listeners for 3 more buttons here
+         // ...  cancelbutton0,  editbutton0, deletebutton0
+
+         $('ul').on('click', "button[name*='submitbutton']" , handleSubmitButton);
+         $('ul').on('click', "button[name*='editbutton']" ,   handleEditButton);
+         $('ul').on('click', "button[name*='cancelbutton']" , handleCancelButton);
+         $('ul').on('click', "button[name*='deletebutton']" , handleDeleteButton);
+
+      };
+
+    };
+
+
+  };  // end of  function handleSubmitButton(e) {
+
+
  // ==========================================================
 
+ function handleCancelButton(e) {
 
-  };
+   // hide the form for this list item
+   // ... including Save button and Cancel button
+   console.log("e.target.name = " + e.target.name);
+
+   var uniqueId = e.target.name.substr(e.target.name.length - 4);
+
+   $('#editForm' + uniqueId).hide();
+
+
+ };  //  function handleCancelButton(e) {
+
+ // ==========================================================
+
+ function handleDeleteButton(e) {
+
+    // delete the Note from the JSON file on the server
+
+    console.log("e.target.name = " + e.target.name);
+
+     var deleteObject =
+     {
+       "uniqueId": "9999",
+     };
+
+     deleteObject.uniqueId = e.target.name.substr(e.target.name.length - 4);
+
+     // stop process from going to a new page when submitbutton0 is clicked
+     e.preventDefault();
+
+     console.log("inside call back for deletebutton0 click event on ul");
+
+     // send DELETE request to the server
+     var xhr3 = new XMLHttpRequest();
+
+     xhr3.open('DELETE', 'http://localhost:3000/data/data.json', true);        // Prepare the request
+
+
+     console.log("JSON.stringify(deleteObject) = " + JSON.stringify(deleteObject));
+     xhr3.send(JSON.stringify(deleteObject.uniqueId));    // Send the request
+
+     // we don't need to wait until the request returns from the Server
+     // we know the uniqueId of the note being deleted.
+     // ... we can just update the html now
+
+     // remove the li. Use  DOM manipulation
+     $li = $('ul').children('#listItem' + deleteObject.uniqueId);
+
+     $li.remove();
+
+     xhr3.onload = function() {                       // When readystate changes
+      // The following conditional check will not work locally - only on a server
+      //if(xhr.status === 200) {                      // If server status was ok
+      console.log("xhr3.responseText = " + xhr3.responseText);
+
+      if(xhr3.status != 200) {
+        console.log("handleDeleteButton returned status = " + xhr.status)
+      }
+
+    };
+
+
+ };  //  function handleDeleteButton(e) {
+
+ // ==========================================================
+
+ function handleEditButton(e) {
+
+    // display the form for this list item
+    // ... hide all other list item forms
+
+       // hide the form for this list item
+   // ... including Save button and Cancel button
+   console.log("e.target.name = " + e.target.name);
+
+   var uniqueId = e.target.name.substr(e.target.name.length - 4);
+
+   // $("button[name*='editForm']").hide();
+   // $("button[name*='submitbutton']").hide();
+   // $("button[name*='cancelbutton']").hide();
+
+
+   $('#editForm' + uniqueId).show();
+
+
+ };  //  function handleEditButton(e) {
+
+
+
 }());
