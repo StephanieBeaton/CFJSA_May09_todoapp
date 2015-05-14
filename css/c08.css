@@ -58,10 +58,6 @@ nav a:hover, a.current {
 a {text-decoration: none; color: #000;}
 
 
-.third, .event {
-  width: 320px;
-  float: left;
-  text-align: center;}
 
 .event p {border-right: 1px solid #999; }
 #content .event:last-child p {border-right: none;}
